@@ -24,7 +24,7 @@ const getData = async () => {
   return tasks
 }
 
-const TaskCard = async ({title, tasks}) => {
+const TaskCard = async ({tasks, title}) => {
   const data = tasks || (await getData())
 
   return (

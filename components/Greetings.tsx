@@ -5,13 +5,13 @@ import Card from "./Card";
 import { delay } from "@/lib/async";
 
 const getData = async () => {
-  await delay(5000);
+  await delay(4000)
   const user = await getUserFromCookie(cookies());
-  return user;
-};
+  return user
+}
 
 const Greetings = async () => {
-  const user = await getData();
+  const user = await getData()
 
   return (
     <Card className="w-full py-4 relative">
@@ -30,4 +30,4 @@ const Greetings = async () => {
   );
 };
 
-export default Greetings;
+export default Greetings

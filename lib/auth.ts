@@ -36,7 +36,7 @@ export const getUserFromCookie = async (cookies) => {
 
     const user = await db.user.findUnique({
         where: {
-        id: id as string,
+        id
         },
 });
 

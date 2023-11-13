@@ -27,4 +27,4 @@ export default async function ProjectPage({params}) {
       <TaskCard tasks={project.tasks} title={project.name} />
     </div>
   )
-}
+} 

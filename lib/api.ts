@@ -1,7 +1,7 @@
-const fetcher = async ({ url, method, body, json = true }) => {
+export const fetcher = async ({ url, method, body, json = true }) => {
     const res = await fetch(url, {
       method,
-      body: body && JSON.stringify(body),
+      ...(body && {body: JSON.stringify(body)}),
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
@@ -14,7 +14,7 @@ const fetcher = async ({ url, method, body, json = true }) => {
   
     if (json) {
       const data = await res.json();
-      return data;
+      return data.data;
     }
   };
   
@@ -36,10 +36,11 @@ const fetcher = async ({ url, method, body, json = true }) => {
     });
   };
 
-  export const createNewProject = (name) => {
+  export const createNewProject = async (name) => {
     return fetcher({
       url: "/api/project",
       method: "POST",
       body: { name },
+      json: true
     });
   };
