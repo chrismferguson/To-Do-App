@@ -40,6 +40,6 @@ export default async function signin(
     }
   } else {
     res.status(402);
-    res.end();
+    res.json({});
   }
 }
