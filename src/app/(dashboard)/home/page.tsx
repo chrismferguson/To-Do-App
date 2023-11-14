@@ -10,6 +10,9 @@ import { db } from "@/lib/db";
 import { cookies } from "next/headers";
 import Link from "next/link";
 import { Suspense } from "react";
+import PomodoroTimer from "@/components/Pomodoro";
+import Card from "@/components/Card";
+
 
 const getData = async () => {
   await delay(2000)
@@ -28,34 +31,30 @@ const getData = async () => {
 }
 
 export default async function Page() {
-  const {projects} = await getData()
+  const { projects } = await getData();
+  const project = projects[0]; // Get the first project from the array
 
   return (
     <div className="h-full overflow-y-auto pr-6 w-full">
-      <div className=" h-full items-stretch justify-center min-h-[content]">
+      <div className="h-full items-stretch justify-center min-h-[content]">
         <div className="flex-1 grow flex">
           <Suspense fallback={<GreetingsSkeleton />}>
             <Greetings />
           </Suspense>
         </div>
-        <div className="flex flex-2 grow items-center flex-wrap mt-3 -m-3 ">
-          {projects.map(project => (
-            <div className="w-1/3 p-3" key={project.id}>
-              <Link href={`/project/${project.id}`}>
-                <ProjectCard project={project}/>
-              </Link>
+        <div className="flex justify-center items-center">
+            <div className="w-1/3 p-3">
+              <PomodoroTimer />
             </div>
-          ))}
-          <div className="w-1/3 p-3">
-            <NewProject />
           </div>
-        </div>
-        <div className="mt-6 flex-2 grow w-full flex">
-          <div className="w-full">
-            <TaskCard />
+          <div className="flex justify-center items-center">
+            <div className="w-1/3 p-3">
+              <NewProject />
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    
   );
 }
+

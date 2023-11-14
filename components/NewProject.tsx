@@ -1,48 +1,49 @@
 'use client'
 
-import { createNewProject } from "@/lib/api";
-import { useState } from "react";
-import Modal from "react-modal";
+import { useState, useEffect } from "react";
 import Button from "./Button";
-import Input from "./Input";
+import { FC } from "react";
+import Card from "./Card";
 
-Modal.setAppElement("#modal");
-
-const NewProject = () => {
-  const [isModalOpen, setIsOpen] = useState(false)
-  const [name, setName] = useState('')
-  const closeModal = () => setIsOpen(false)
-  const openModal = () => setIsOpen(true)
-
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    await createNewProject(name)
-    closeModal()
-  }
-
-  return (
-    <div className="px-6 py-8 hover:scale-105 transition-all ease-in-out duration-200 flex justify-center items-center">
-      <Button onClick={() => openModal()}>+ New Project</Button>
-
-      <Modal
-        isOpen={isModalOpen}
-        onRequestClose={closeModal}
-        overlayClassName="bg-[rgba(0,0,0,.4)] flex justify-center items-center absolute top-0 left-0 h-screen w-screen"
-        className="w-3/4 bg-white rounded-xl p-8"
-      >
-        <h1 className="text-3xl mb-6">New Project</h1>
-        <form className="flex items-center" onSubmit={handleSubmit}>
-          <Input
-            placeholder="project name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-          <Button type="submit">Create</Button>
-        </form>
-      </Modal>
-    </div>
-  )
-}
-
-export default NewProject
-
+const NewProject: FC = () => {
+    const [timeLeft, setTimeLeft] = useState(25 * 60); // 25 minutes in seconds
+    const [isRunning, setIsRunning] = useState(false);
+  
+    const handleStartClick = () => {
+      setIsRunning(true);
+    };
+  
+    const handlePauseClick = () => {
+      setIsRunning(false);
+    };
+  
+    useEffect(() => {
+      let interval;
+      if (isRunning) {
+        interval = setInterval(() => {
+          setTimeLeft((prevTimeLeft) => prevTimeLeft - 1);
+        }, 1000);
+      }
+      return () => clearInterval(interval);
+    }, [isRunning]);
+  
+    const minutes = Math.floor(timeLeft / 60);
+    const seconds = timeLeft % 60;
+  
+    return (
+      <Card className="w-full p-6 text-xl">
+        <div className="px-6 py-8 hover:scale-105 transition-all ease-in-out duration-200 flex flex-col items-center">
+          <div className="text-3xl font-bold mb-4">
+            {`${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`}
+          </div>
+          {isRunning ? (
+            <Button onClick={handlePauseClick}>Pause</Button>
+          ) : (
+            <Button onClick={handleStartClick}>Start</Button>
+          )}
+        </div>
+      </Card>
+    );
+  };
+  
+  export default NewProject;

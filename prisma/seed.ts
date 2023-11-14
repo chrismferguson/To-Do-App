@@ -13,7 +13,6 @@ const getRandomTaskStatus = () => {
 };
 
 async function main() {
-    
   const user = await db.user.upsert({
     where: { email: "user@email.com" },
     update: {},
@@ -23,10 +22,10 @@ async function main() {
       lastName: "Person",
       password: await hashPassword("password"),
       projects: {
-        create: new Array(5).fill(1).map((_, i) => ({
-          name: `Project ${i}`,
+        create: {
+          name: "Project",
           due: new Date(2022, 11, 25),
-        })),
+        },
       },
     },
     include: {
@@ -34,24 +33,21 @@ async function main() {
     },
   });
 
-  const tasks = await Promise.all(
-    user.projects.map((project) =>
-      db.task.createMany({
-        data: new Array(10).fill(1).map((_, i) => {
-          return {
-            name: `Task ${i}`,
-            ownerId: user.id,
-            projectId: project.id,
-            description: `Everything that describes Task ${i}`,
-            status: getRandomTaskStatus(),
-          };
-        }),
-      })
-    )
-  );
+  const project = user.projects[0]; // Get the first project from the user's projects
 
-  console.log({ user, tasks });
+  const task = await db.task.create({
+    data: {
+      name: "Task",
+      ownerId: user.id,
+      projectId: project.id,
+      description: "Everything that describes the task",
+      status: getRandomTaskStatus(),
+    },
+  });
+
+  console.log({ user, task });
 }
+
 main()
   .then(async () => {
     await db.$disconnect();
